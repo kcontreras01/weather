@@ -10,7 +10,7 @@ class Search extends Component {
       mode: 'displayForm',
       current: false,
       value: '',
-      results: []
+      results: {}
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -21,7 +21,7 @@ class Search extends Component {
   }
 
   // componentDidMount(){
-  //   axios.get(``)
+  //   axios.get(`http://api.openweathermap.org/data/2.5/weather?zip=${this.state.value}&APPID=1c742ce6920b65c49ad5268f6a32a0bf&units=imperial`)
   //     .then(res => {
   //       this.setState({
   //         results: res.data
@@ -41,7 +41,9 @@ class Search extends Component {
     this.setState({
       mode: 'displayForm',
       value: ""
-    });
+    }).catch(err => {
+            console.log(err);
+        });
   }
 
   onSubmit(event) {
@@ -49,16 +51,14 @@ class Search extends Component {
     // console.log('the state value is: ', this.state.value)
     this.setState({
       mode: 'displayResults'
-    });
+    })
 
     axios.get(`http://api.openweathermap.org/data/2.5/weather?zip=${this.state.value}&APPID=1c742ce6920b65c49ad5268f6a32a0bf&units=imperial`)
       .then(res => {
-      // console.log(this.state.value)
-      // console.log("res.data", res.data.main);
       this.setState({
-        results: res,
-        value: ''
+        results: res.data.main,
       })
+      // console.log("the state is: ", this.state.results);
     })
   };
 
@@ -71,7 +71,8 @@ class Search extends Component {
   }
   render() {
     return (
-      <div className="App">
+      // console.log('the state in render is: ', this.state.results),
+      <div>
         {this.state.mode === 'displayForm' && (
           <div>
             <form className="searchForm" onSubmit={this.onSubmit}>
