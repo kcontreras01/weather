@@ -10,7 +10,9 @@ class Search extends Component {
       mode: 'displayForm',
       current: false,
       value: '',
-      results: {}
+      results: {},
+      name: '',
+      // description: ''
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -19,15 +21,6 @@ class Search extends Component {
     this.changeMode = this.changeMode.bind(this);    
 
   }
-
-  // componentDidMount(){
-  //   axios.get(`http://api.openweathermap.org/data/2.5/weather?zip=${this.state.value}&APPID=1c742ce6920b65c49ad5268f6a32a0bf&units=imperial`)
-  //     .then(res => {
-  //       this.setState({
-  //         results: res.data
-  //       })
-  //     })
-  // }
 
   handleChange(event) {
     event.preventDefault();
@@ -41,9 +34,7 @@ class Search extends Component {
     this.setState({
       mode: 'displayForm',
       value: ""
-    }).catch(err => {
-            console.log(err);
-        });
+    })
   }
 
   onSubmit(event) {
@@ -55,10 +46,13 @@ class Search extends Component {
 
     axios.get(`http://api.openweathermap.org/data/2.5/weather?zip=${this.state.value}&APPID=1c742ce6920b65c49ad5268f6a32a0bf&units=imperial`)
       .then(res => {
+        // console.log('the response is:', res.data.weather.description),
       this.setState({
         results: res.data.main,
+        name: res.data.name,
+        // description: res.data.weather
       })
-      // console.log("the state is: ", this.state.results);
+      // console.log("the state is: ", this.state.description);
     })
   };
 
@@ -72,7 +66,7 @@ class Search extends Component {
   render() {
     return (
       // console.log('the state in render is: ', this.state.results),
-      <div>
+      <div className="banner">
         {this.state.mode === 'displayForm' && (
           <div>
             <form className="searchForm" onSubmit={this.onSubmit}>
@@ -91,7 +85,8 @@ class Search extends Component {
 
         {this.state.mode === 'displayResults' && (
           <div>
-            <Results dataSearch={this.state.results} />
+            <button onClick={this.onClick}>Search Again</button>
+            <Results dataSearch={this.state.results} name={this.state.name} />
           </div>
         )}
       </div>
